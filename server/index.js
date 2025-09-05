@@ -9,6 +9,11 @@ const cors = require("cors");
 
 const port = process.env.API_PORT || 3000;
 
+// get ip address of the server
+const ip_address = require("ip");
+const ip_address = ip_address.address();
+console.log("ip_address", ip_address);
+
 console.log("starting server...");
 
 // DB
@@ -45,7 +50,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${port}`,
+                url: `http://${ip_address}:${port}`,
                 description: 'Development server'
             },
         ],
@@ -79,7 +84,7 @@ app.use(cors());
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log(`You can now access the server at http://localhost:${port}`);
+    console.log(`You can now access the server at http://${ip_address}:${port}`);
 });
 
 // routes
