@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 
@@ -10,20 +10,19 @@ console.log("starting server...");
 
 console.log("DB_USER", process.env.DB_USER);
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qviyxhw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qviyxhw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-const client = new MongoClient(uri);
-
-async function run() {
+async function connectDb() {
     try {
-        await client.connect();
-        console.log("Connected to MongoDB");
+        await mongoose.connect(uri, { dbName: process.env.DB_NAME });
+        console.log("Connected to MongoDB via Mongoose");
     } catch (error) {
         console.error("Error connecting to MongoDB", error);
+        process.exit(1);
     }
 }
 
-run();
+connectDb();
 
 
 const app = express();
