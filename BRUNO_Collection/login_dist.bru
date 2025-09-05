@@ -1,11 +1,11 @@
 meta {
-  name: register
+  name: login_dist
   type: http
-  seq: 2
+  seq: 5
 }
 
 post {
-  url: {{baseUrl}}/auth/register
+  url: http:/efrei-fullstack-js-mycontacts.onrender.com/auth/login
   body: formUrlEncoded
   auth: none
 }
@@ -15,6 +15,6 @@ body:json {
 }
 
 body:form-urlencoded {
-  email: testddqss@dds.com
+  email: testddqs@dds.com
   password: test
 }

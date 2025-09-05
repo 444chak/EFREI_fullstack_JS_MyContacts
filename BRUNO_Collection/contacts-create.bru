@@ -1,0 +1,22 @@
+meta {
+  name: Create Contact
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/contacts
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:form-urlencoded {
+  firstName: John
+  lastName: Doe
+  phone: 0123456789
+}

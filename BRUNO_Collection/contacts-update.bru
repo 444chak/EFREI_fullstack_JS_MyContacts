@@ -1,0 +1,22 @@
+meta {
+  name: Update Contact
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/contacts/{{contactId}}
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:form-urlencoded {
+  firstName: Jane
+  lastName: Smith
+  phone: 0987654321
+}

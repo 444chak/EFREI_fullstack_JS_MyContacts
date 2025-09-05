@@ -1,0 +1,15 @@
+meta {
+  name: Get All Contacts
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/contacts
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

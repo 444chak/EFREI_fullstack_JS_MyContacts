@@ -1,0 +1,22 @@
+meta {
+  name: Create Multiple Contacts
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/contacts
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:form-urlencoded {
+  firstName: Alice
+  lastName: Johnson
+  phone: 0555123456
+}
