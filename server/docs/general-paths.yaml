@@ -1,0 +1,13 @@
+paths:
+  /:
+    get:
+      summary: Welcome message
+      tags: [General]
+      responses:
+        200:
+          description: Welcome message
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello World
