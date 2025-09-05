@@ -6,14 +6,8 @@ const authRoutes = require("./routes/auth");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
-const ip = require("ip");
-
 
 const port = process.env.API_PORT || 3000;
-
-// get ip address of the server
-const ip_address = ip.address();
-console.log("ip_address", ip_address);
 
 console.log("starting server...");
 
@@ -51,7 +45,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://${ip_address}:${port}`,
+                url: `http://localhost:${port}`,
                 description: 'Development server'
             },
         ],
@@ -81,11 +75,9 @@ const app = express();
 app.use(express.json()); // pour post en json
 app.use(express.urlencoded({ extended: true })); // pour post en form-urlencoded
 
-app.use(cors());
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log(`You can now access the server at http://${ip_address}:${port}`);
+    console.log(`You can now access the server at http://localhost:${port}`);
 });
 
 // routes
