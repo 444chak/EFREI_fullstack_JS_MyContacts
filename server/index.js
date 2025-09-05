@@ -6,12 +6,13 @@ const authRoutes = require("./routes/auth");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
+const ip = require("ip");
+
 
 const port = process.env.API_PORT || 3000;
 
 // get ip address of the server
-const ip_address = require("ip");
-const ip_address = ip_address.address();
+const ip_address = ip.address();
 console.log("ip_address", ip_address);
 
 console.log("starting server...");
