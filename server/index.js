@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const authRoutes = require("./routes/auth");
 require("dotenv").config();
 
 
@@ -14,7 +15,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 
 async function connectDb() {
     try {
-        await mongoose.connect(uri, { dbName: process.env.DB_NAME });
+        await mongoose.connect(uri, { dbName: process.env.DB_NAME || "mycontacts" });
         console.log("Connected to MongoDB via Mongoose");
     } catch (error) {
         console.error("Error connecting to MongoDB", error);
@@ -29,6 +30,10 @@ const app = express();
 
 // server
 
+// body parsers
+app.use(express.json()); // pour post en json
+app.use(express.urlencoded({ extended: true })); // pour post en form-urlencoded
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
     console.log("You can now access the server at http://localhost:3000");
@@ -39,4 +44,6 @@ app.listen(3000, () => {
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
+
+app.use("/auth", authRoutes); // routes d'authent
 
