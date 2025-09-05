@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
+const cors = require("cors");
 
 const port = process.env.API_PORT || 3000;
 
@@ -74,6 +75,8 @@ const app = express();
 app.use(express.json()); // pour post en json
 app.use(express.urlencoded({ extended: true })); // pour post en form-urlencoded
 
+app.use(cors());
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     console.log(`You can now access the server at http://localhost:${port}`);
@@ -83,21 +86,6 @@ app.listen(port, () => {
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // swagger route
 
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Welcome message
- *     tags: [General]
- *     responses:
- *       200:
- *         description: Welcome message
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: Hello World
- */
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
