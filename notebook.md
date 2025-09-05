@@ -47,3 +47,7 @@ RUN back-end :
 ```bash
 node server/index.js
 ```
+
+BRUNO Collection :
+
+équivalent à postman (open source ^^)

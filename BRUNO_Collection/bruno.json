@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "MyContacts_BRUNO_Collection",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
