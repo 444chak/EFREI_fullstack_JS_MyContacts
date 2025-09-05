@@ -17,10 +17,11 @@ import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
+    const isAuthenticated = localStorage.getItem('token');
     return (
         <Router>
             <div className="App">
-                <Navbar />
+                <Navbar isAuthenticated={isAuthenticated} />
                 <main className="main-content">
                     <Routes>
                         {/* Public routes */}
