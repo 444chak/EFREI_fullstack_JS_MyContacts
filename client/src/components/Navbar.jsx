@@ -8,6 +8,10 @@ const Navbar = (
         isAuthenticated
     }
 ) => {
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    };
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, textAlign: 'center' }}>
             <Stack direction="row" spacing={2}>
@@ -47,6 +51,15 @@ const Navbar = (
                         color="primary"
                     >
                         Contacts
+                    </Button>
+                )}
+                {isAuthenticated && (
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleLogout}
+                    >
+                        Déconnexion
                     </Button>
                 )}
             </Stack>

@@ -29,7 +29,7 @@ const LoginPage = () => {
         return <div>Loading...</div>;
     }
     if (isLoggedIn) {
-        return <Navigate to="/contacts" />
+        return window.location.href = '/contacts';
     }
     if (error) {
         return <div>Error: {error}</div>;
