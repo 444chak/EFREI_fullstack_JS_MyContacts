@@ -1,0 +1,609 @@
+openapi: 3.0.0
+info:
+  title: MyContacts API
+  version: 1.0.0
+  description: |
+    API documentation for MyContacts - Contact Management System
+
+    This API provides endpoints for user authentication and contact management.
+    All contact operations require JWT authentication.
+
+    ## Authentication
+    The API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+
+    ## Getting Started
+    1. Register a new user with `/auth/register`
+    2. Login with `/auth/login` to get your JWT token
+    3. Use the token to access contact endpoints
+  contact:
+    name: API Support
+    email: support@mycontacts.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.mycontacts.com
+    description: Production server
+
+security:
+  - bearerAuth: []
+
+paths:
+  /:
+    get:
+      summary: Welcome message
+      description: Returns a simple welcome message to verify the API is running
+      tags: [General]
+      security: []
+      responses:
+        200:
+          description: Welcome message
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello World
+
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Create a new user account with email and password
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        201:
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        400:
+          description: Bad request - Invalid input or email already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                missing_fields:
+                  summary: Missing email or password
+                  value:
+                    message: Email and password are required
+                invalid_email:
+                  summary: Invalid email format
+                  value:
+                    message: Invalid email
+                email_exists:
+                  summary: Email already in use
+                  value:
+                    message: Email already in use
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      summary: Login user and get JWT token
+      description: Authenticate user and receive a JWT token for API access
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        200:
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Invalid credentials
+        400:
+          description: Bad request - Missing email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Email and password are required
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /contacts:
+    get:
+      summary: Get all contacts
+      description: Retrieve all contacts for the authenticated user
+      tags: [Contacts]
+      responses:
+        200:
+          description: List of contacts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactListResponse"
+              example:
+                - _id: 507f1f77bcf86cd799439012
+                  firstName: John
+                  lastName: Doe
+                  phone: +1234567890
+                  contactOf: 507f1f77bcf86cd799439011
+                  createdAt: 2023-01-01T00:00:00.000Z
+                  updatedAt: 2023-01-01T00:00:00.000Z
+                - _id: 507f1f77bcf86cd799439013
+                  firstName: Jane
+                  lastName: Smith
+                  phone: +0987654321
+                  contactOf: 507f1f77bcf86cd799439011
+                  createdAt: 2023-01-01T00:00:00.000Z
+                  updatedAt: 2023-01-01T00:00:00.000Z
+        401:
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                no_token:
+                  summary: No token provided
+                  value:
+                    message: No token provided
+                invalid_token:
+                  summary: Invalid token
+                  value:
+                    message: Invalid token
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      summary: Create a new contact
+      description: Create a new contact for the authenticated user
+      tags: [Contacts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactRequest"
+            example:
+              firstName: John
+              lastName: Doe
+              phone: +1234567890
+      responses:
+        201:
+          description: Contact created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+              example:
+                _id: 507f1f77bcf86cd799439012
+                firstName: John
+                lastName: Doe
+                phone: +1234567890
+                contactOf: 507f1f77bcf86cd799439011
+                createdAt: 2023-01-01T00:00:00.000Z
+                updatedAt: 2023-01-01T00:00:00.000Z
+        400:
+          description: Bad request - Missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: All fields are required
+        401:
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                no_token:
+                  summary: No token provided
+                  value:
+                    message: No token provided
+                invalid_token:
+                  summary: Invalid token
+                  value:
+                    message: Invalid token
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /contacts/{id}:
+    patch:
+      summary: Update a contact
+      description: Partially update an existing contact by ID for the authenticated user
+      tags: [Contacts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The contact ID
+          schema:
+            type: string
+          example: 507f1f77bcf86cd799439012
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactUpdateRequest"
+            example:
+              firstName: John
+              phone: +1234567890
+      responses:
+        200:
+          description: Contact updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+              example:
+                _id: 507f1f77bcf86cd799439012
+                firstName: John
+                lastName: Doe
+                phone: +1234567890
+                contactOf: 507f1f77bcf86cd799439011
+                createdAt: 2023-01-01T00:00:00.000Z
+                updatedAt: 2023-01-01T00:00:00.000Z
+        401:
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                no_token:
+                  summary: No token provided
+                  value:
+                    message: No token provided
+                invalid_token:
+                  summary: Invalid token
+                  value:
+                    message: Invalid token
+        404:
+          description: Contact not found or not authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Contact not found or not authorized
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      summary: Delete a contact
+      description: Delete an existing contact by ID for the authenticated user
+      tags: [Contacts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The contact ID
+          schema:
+            type: string
+          example: 507f1f77bcf86cd799439012
+      responses:
+        200:
+          description: Contact deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResponse"
+              example:
+                message: Contact deleted successfully
+        401:
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                no_token:
+                  summary: No token provided
+                  value:
+                    message: No token provided
+                invalid_token:
+                  summary: Invalid token
+                  value:
+                    message: Invalid token
+        404:
+          description: Contact not found or not authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Contact not found or not authorized
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        _id:
+          type: string
+          description: The auto-generated id of the user
+          example: 507f1f77bcf86cd799439011
+        email:
+          type: string
+          format: email
+          description: The user's email address
+          example: user@example.com
+        password:
+          type: string
+          description: The user's hashed password
+          example: $2b$10$encryptedpassword
+        createdAt:
+          type: string
+          format: date-time
+          description: The date when the user was created
+          example: 2023-01-01T00:00:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date when the user was last updated
+          example: 2023-01-01T00:00:00.000Z
+
+    Contact:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - phone
+        - contactOf
+      properties:
+        _id:
+          type: string
+          description: The auto-generated id of the contact
+          example: 507f1f77bcf86cd799439012
+        firstName:
+          type: string
+          description: The contact's first name
+          example: John
+        lastName:
+          type: string
+          description: The contact's last name
+          example: Doe
+        phone:
+          type: string
+          description: The contact's phone number
+          example: +1234567890
+        contactOf:
+          type: string
+          description: The ID of the user who owns this contact
+          example: 507f1f77bcf86cd799439011
+        createdAt:
+          type: string
+          format: date-time
+          description: The date when the contact was created
+          example: 2023-01-01T00:00:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date when the contact was last updated
+          example: 2023-01-01T00:00:00.000Z
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address
+          example: user@example.com
+        password:
+          type: string
+          minLength: 6
+          description: The user's password
+          example: password123
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address
+          example: user@example.com
+        password:
+          type: string
+          description: The user's password
+          example: password123
+
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message
+          example: Login successful
+        token:
+          type: string
+          description: JWT token for authentication
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              description: User ID
+              example: 507f1f77bcf86cd799439011
+            email:
+              type: string
+              format: email
+              description: User email
+              example: user@example.com
+
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message
+          example: User created successfully
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              description: User ID
+              example: 507f1f77bcf86cd799439011
+            email:
+              type: string
+              format: email
+              description: User email
+              example: user@example.com
+
+    ContactRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - phone
+      properties:
+        firstName:
+          type: string
+          description: The contact's first name
+          example: John
+        lastName:
+          type: string
+          description: The contact's last name
+          example: Doe
+        phone:
+          type: string
+          description: The contact's phone number
+          example: +1234567890
+
+    ContactUpdateRequest:
+      type: object
+      description: Partial contact update - only include fields you want to update
+      properties:
+        firstName:
+          type: string
+          description: The contact's first name
+          example: John
+        lastName:
+          type: string
+          description: The contact's last name
+          example: Doe
+        phone:
+          type: string
+          description: The contact's phone number
+          example: +1234567890
+
+    ContactListResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Contact"
+
+    DeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message
+          example: Contact deleted successfully
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+        error:
+          type: string
+          description: Detailed error message (optional)
+      examples:
+        missing_fields:
+          summary: Missing required fields
+          value:
+            message: All fields are required
+        invalid_token:
+          summary: Invalid token
+          value:
+            message: Invalid token
+        no_token:
+          summary: No token provided
+          value:
+            message: No token provided
+        not_found:
+          summary: Resource not found
+          value:
+            message: Contact not found or not authorized
+        server_error:
+          summary: Internal server error
+          value:
+            message: Internal server error
+            error: Detailed error message
+
+tags:
+  - name: General
+    description: General API endpoints
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Contacts
+    description: Contact management endpoints

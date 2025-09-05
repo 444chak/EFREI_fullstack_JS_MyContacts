@@ -2,6 +2,7 @@ paths:
   /:
     get:
       summary: Welcome message
+      description: Returns a simple welcome message to verify the API is running
       tags: [General]
       responses:
         200:
