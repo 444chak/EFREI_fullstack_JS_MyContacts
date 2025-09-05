@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
+const contactRoutes = require("./routes/contact");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
@@ -89,4 +90,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes); // routes d'authent
+
+app.use("/contacts", contactRoutes); // routes pour les contacts
 
