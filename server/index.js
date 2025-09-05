@@ -1,9 +1,12 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
-require("dotenv").config();
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 
-
+const port = process.env.API_PORT || 3000;
 
 console.log("starting server...");
 
@@ -25,22 +28,76 @@ async function connectDb() {
 
 connectDb();
 
+// swagger
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'MyContacts API',
+            version: '1.0.0',
+            description: 'API documentation for MyContacts - Contact Management System',
+            contact: {
+                name: 'API Support',
+                email: 'support@mycontacts.com'
+            }
+        },
+        servers: [
+            {
+                url: `http://localhost:${port}`,
+                description: 'Development server'
+            },
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT'
+                }
+            }
+        }
+    },
+    apis: ['./routes/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+
+
+// server
 
 const app = express();
 
-// server
 
 // body parsers
 app.use(express.json()); // pour post en json
 app.use(express.urlencoded({ extended: true })); // pour post en form-urlencoded
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
-    console.log("You can now access the server at http://localhost:3000");
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+    console.log(`You can now access the server at http://localhost:${port}`);
 });
 
 // routes
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // swagger route
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Welcome message
+ *     tags: [General]
+ *     responses:
+ *       200:
+ *         description: Welcome message
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Hello World
+ */
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
