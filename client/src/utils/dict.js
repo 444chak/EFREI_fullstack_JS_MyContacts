@@ -53,6 +53,12 @@ const dict = {
         deleteContact: 'Delete Contact',
         deleted: 'Contact deleted successfully.',
     },
+    home: {
+        title: 'MyContacts',
+        subtitle: 'Welcome to MyContacts, the best way to manage your contacts.',
+        login: 'Login',
+        contacts: 'Contacts',
+    },
 };
 
 export default dict;
