@@ -15,47 +15,49 @@ import NotFoundPage from './pages/NotFoundPage';
 // Components
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './hooks/AuthContext';
 
 function App() {
-    const isAuthenticated = localStorage.getItem('token');
     return (
         <Router>
-            <div className="App">
-                <Navbar isAuthenticated={isAuthenticated} />
-                <main className="main-content">
-                    <Routes>
-                        {/* Public routes */}
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<RegisterPage />} />
+            <AuthProvider>
+                <div className="App">
+                    <Navbar />
+                    <main className="main-content">
+                        <Routes>
+                            {/* Public routes */}
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/register" element={<RegisterPage />} />
 
-                        {/* Protected routes */}
-                        <Route path="/contacts" element={
-                            <ProtectedRoute>
-                                <ContactsPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/contacts/create" element={
-                            <ProtectedRoute>
-                                <CreateContactPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/contacts/:id" element={
-                            <ProtectedRoute>
-                                <ContactDetailPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/contacts/:id/edit" element={
-                            <ProtectedRoute>
-                                <EditContactPage />
-                            </ProtectedRoute>
-                        } />
+                            {/* Protected routes */}
+                            <Route path="/contacts" element={
+                                <ProtectedRoute>
+                                    <ContactsPage />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="/contacts/create" element={
+                                <ProtectedRoute>
+                                    <CreateContactPage />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="/contacts/:id" element={
+                                <ProtectedRoute>
+                                    <ContactDetailPage />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="/contacts/:id/edit" element={
+                                <ProtectedRoute>
+                                    <EditContactPage />
+                                </ProtectedRoute>
+                            } />
 
-                        <Route path="/404" element={<NotFoundPage />} />
-                        <Route path="*" element={<Navigate to="/404" replace />} />
-                    </Routes>
-                </main>
-            </div>
+                            <Route path="/404" element={<NotFoundPage />} />
+                            <Route path="*" element={<Navigate to="/404" replace />} />
+                        </Routes>
+                    </main>
+                </div>
+            </AuthProvider>
         </Router>
     );
 }

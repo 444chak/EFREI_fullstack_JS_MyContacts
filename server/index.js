@@ -93,7 +93,7 @@ app.listen(port, () => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // swagger route
 
 app.get("/", (req, res) => {
-    res.send("Hello World");
+    res.send("Hello World, for swagger <a href='/api-docs'>API Docs</a>");
 });
 
 app.use("/auth", authRoutes); // routes d'authent

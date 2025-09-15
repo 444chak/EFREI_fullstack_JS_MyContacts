@@ -1,16 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Stack, Box } from '@mui/material';
+import { useAuth } from '../hooks/AuthContext';
 
 
-const Navbar = (
-    {
-        isAuthenticated
-    }
-) => {
+const Navbar = () => {
+    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
+        logout();
+        navigate('/login');
     };
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, textAlign: 'center' }}>

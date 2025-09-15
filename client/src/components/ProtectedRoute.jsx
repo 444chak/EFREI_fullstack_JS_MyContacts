@@ -1,10 +1,9 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../hooks/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-    // TODO: Vérifier si l'utilisateur est connecté
-    const isAuthenticated = localStorage.getItem('token');
-
+    const { isAuthenticated } = useAuth();
     return isAuthenticated ? children : <Navigate to="/login" />;
 };
 

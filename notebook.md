@@ -51,3 +51,10 @@ node server/index.js
 BRUNO Collection :
 
 équivalent à postman (open source ^^)
+TODO :
+
+séparer config
+
+ajouter services (auth, contact)
+
+ajouter validation & errors middleware
