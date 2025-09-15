@@ -41,8 +41,17 @@ const dict = {
 
     contacts: {
         title: 'Contacts',
-        list: 'List of contacts',
+        label: 'List of contacts',
+        subtitle: 'Click on a contact to view details',
         loggedIn: 'You are logged in.',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        phone: 'Phone',
+        update: 'Update',
+        updated: 'Contact updated successfully.',
+        cancel: 'Cancel',
+        deleteContact: 'Delete Contact',
+        deleted: 'Contact deleted successfully.',
     },
 };
 

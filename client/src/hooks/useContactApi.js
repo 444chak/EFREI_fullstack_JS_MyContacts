@@ -6,6 +6,16 @@ export default function useContactApi() {
         return data;
     };
 
-    return { getContacts };
+    const updateContact = async (id, updatedContact) => {
+        const { data } = await api.patch(`/contacts/${id}`, updatedContact);
+        return data;
+    };
+
+    const deleteContact = async (id) => {
+        const { data } = await api.delete(`/contacts/${id}`);
+        return data;
+    };
+
+    return { getContacts, updateContact, deleteContact };
 }
 

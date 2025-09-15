@@ -11,7 +11,12 @@ router.post(
     runValidators([requireBodyFields(["firstName", "lastName", "phone"])]),
     ContactController.createContact
 );
-router.patch("/:id", verifyAuth, ContactController.updateContact);
+router.patch(
+    "/:id",
+    verifyAuth,
+    runValidators([requireBodyFields(["firstName", "lastName", "phone"])]),
+    ContactController.updateContact
+);
 router.delete("/:id", verifyAuth, ContactController.deleteContact);
 
 module.exports = router;
