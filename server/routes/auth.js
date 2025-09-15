@@ -1,17 +1,28 @@
-// ROUTES D'AUTHENTIFICATION
+// Auth routes
 
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const AuthController = require("../controllers/auth");
+const { runValidators, requireBodyFields, validateEmailField } = require("../middlewares/validation");
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
-router.post("/register", AuthController.register);
+router.post(
+    "/register",
+    runValidators([
+        requireBodyFields(["email", "password"]),
+        validateEmailField("email"),
+    ]),
+    AuthController.register
+);
 
-router.post("/login", AuthController.login);
+router.post(
+    "/login",
+    runValidators([
+        requireBodyFields(["email", "password"]),
+        validateEmailField("email"),
+    ]),
+    AuthController.login
+);
 
 
 module.exports = router;

@@ -9,7 +9,7 @@ class ContactController {
      * @param {Object} res - The response object
      * @returns {Object} - The response object
      */
-    static async createContact(req, res) {
+    static async createContact(req, res, next) {
         try {
             const token = req.headers.authorization?.replace('Bearer ', '');
             if (!token) {
@@ -29,9 +29,10 @@ class ContactController {
             res.status(201).json(contact);
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
-                return res.status(401).json({ message: "Invalid token" });
+                error.status = 401;
+                error.message = "Invalid token";
             }
-            res.status(500).json({ message: "Internal server error", error: error.message });
+            next(error);
         }
     }
 
@@ -41,7 +42,7 @@ class ContactController {
      * @param {Object} res - The response object
      * @returns {Object} - The response object
      */
-    static async getContacts(req, res) {
+    static async getContacts(req, res, next) {
         try {
             const token = req.headers.authorization?.replace('Bearer ', '');
             if (!token) {
@@ -54,9 +55,10 @@ class ContactController {
             res.status(200).json(contacts);
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
-                return res.status(401).json({ message: "Invalid token" });
+                error.status = 401;
+                error.message = "Invalid token";
             }
-            res.status(500).json({ message: "Internal server error", error: error.message });
+            next(error);
         }
     }
 
@@ -66,7 +68,7 @@ class ContactController {
      * @param {Object} res - The response object
      * @returns {Object} - The response object
      */
-    static async updateContact(req, res) {
+    static async updateContact(req, res, next) {
         try {
             const token = req.headers.authorization?.replace('Bearer ', '');
             if (!token) {
@@ -90,9 +92,10 @@ class ContactController {
             res.status(200).json(contact);
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
-                return res.status(401).json({ message: "Invalid token" });
+                error.status = 401;
+                error.message = "Invalid token";
             }
-            res.status(500).json({ message: "Internal server error", error: error.message });
+            next(error);
         }
     }
 
@@ -102,7 +105,7 @@ class ContactController {
      * @param {Object} res - The response object
      * @returns {Object} - The response object
      */
-    static async deleteContact(req, res) {
+    static async deleteContact(req, res, next) {
         try {
             const token = req.headers.authorization?.replace('Bearer ', '');
             if (!token) {
@@ -122,9 +125,10 @@ class ContactController {
             res.status(200).json({ message: "Contact deleted successfully" });
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
-                return res.status(401).json({ message: "Invalid token" });
+                error.status = 401;
+                error.message = "Invalid token";
             }
-            res.status(500).json({ message: "Internal server error", error: error.message });
+            next(error);
         }
     }
 }

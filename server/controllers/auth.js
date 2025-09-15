@@ -9,7 +9,7 @@ class AuthController {
      * @param {Object} res - The response object
      * @returns {Object} - The response object
      */
-    static async register(req, res) {
+    static async register(req, res, next) {
         try {
             const { email, password } = req.body;
 
@@ -31,9 +31,7 @@ class AuthController {
             await user.save();
 
             res.status(201).json({ message: "User created successfully", user: { id: user._id, email: user.email } });
-        } catch (error) {
-            res.status(500).json({ message: "Internal server error", error: error.message });
-        }
+        } catch (error) { next(error); }
     }
 
     /**
@@ -42,7 +40,7 @@ class AuthController {
      * @param {Object} res - The response object
      * @returns {Object} - The response object
      */
-    static async login(req, res) {
+    static async login(req, res, next) {
         try {
             const { email, password } = req.body;
 
@@ -63,9 +61,7 @@ class AuthController {
                 token,
                 user: { id: user._id, email: user.email }
             });
-        } catch (error) {
-            res.status(500).json({ message: "Internal server error", error: error.message });
-        }
+        } catch (error) { next(error); }
     }
 }
 

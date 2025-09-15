@@ -8,6 +8,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerOptions = require("./config/swagger");
 const { connectDb } = require("./config/database");
 const corsOptions = require("./config/cors");
+const { errorHandler, notFoundHandler } = require("./middlewares/error");
 
 // ============== Define PORT ==============
 const port = process.env.API_PORT || 3000;
@@ -53,4 +54,6 @@ app.get("/", (_, res) => {
 app.use("/auth", authRoutes); // routes d'authent
 
 app.use("/contacts", contactRoutes); // routes pour les contacts
-
+// ============== not found + error handlers ==============
+app.use(notFoundHandler);
+app.use(errorHandler);
