@@ -1,7 +1,7 @@
 // CONTACT MODEL
 
 const mongoose = require("mongoose");
-const DB_CONFIG = require("../config/database");
+const { DB_CONFIG } = require("../config/database");
 
 const contactSchema = new mongoose.Schema(
     {

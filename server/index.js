@@ -1,100 +1,54 @@
 require("dotenv").config();
 
 const express = require("express");
-const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const contactRoutes = require("./routes/contact");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-const cors = require("cors");
+const swaggerOptions = require("./config/swagger");
+const { connectDb } = require("./config/database");
+const corsOptions = require("./config/cors");
 
+// ============== Define PORT ==============
 const port = process.env.API_PORT || 3000;
 
 console.log("starting server...");
 
-// DB
+// ============== DB init ==============
 
-console.log("DB_USER", process.env.DB_USER);
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qviyxhw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
-async function connectDb() {
-    try {
-        await mongoose.connect(uri, { dbName: process.env.DB_NAME || "mycontacts" });
-        console.log("Connected to MongoDB via Mongoose");
-    } catch (error) {
-        console.error("Error connecting to MongoDB", error);
-        process.exit(1);
-    }
-}
-
+console.log("connecting to DB...");
 connectDb();
 
-// swagger
 
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'MyContacts API',
-            version: '1.0.0',
-            description: 'API documentation for MyContacts - Contact Management System',
-            contact: {
-                name: 'API Support',
-                email: 'support@mycontacts.com'
-            }
-        },
-        servers: [
-            {
-                url: `http://localhost:${port}`,
-                description: 'Development server'
-            },
-        ],
-        components: {
-            securitySchemes: {
-                bearerAuth: {
-                    type: 'http',
-                    scheme: 'bearer',
-                    bearerFormat: 'JWT'
-                }
-            }
-        }
-    },
-    apis: ["./docs/*.yaml"],
-};
+// ============== swagger init ==============
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-
-
-// server
+// ============== server init ==============
 
 const app = express();
 
-// CORS configuration
-app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:5555'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// ============== CORS configuration ==============
+app.use(corsOptions);
 
-// body parsers
+// ============== body parsers ==============
 app.use(express.json()); // pour post en json
 app.use(express.urlencoded({ extended: true })); // pour post en form-urlencoded
+
+// ============== server start ==============
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     console.log(`You can now access the server at http://localhost:${port}`);
 });
 
-// routes
+// ============== routes ==============
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // swagger route
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
     res.send("Hello World, for swagger <a href='/api-docs'>API Docs</a>");
-});
+}); // hello world route
 
 app.use("/auth", authRoutes); // routes d'authent
 
