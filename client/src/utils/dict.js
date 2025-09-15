@@ -52,6 +52,23 @@ const dict = {
         cancel: 'Cancel',
         deleteContact: 'Delete Contact',
         deleted: 'Contact deleted successfully.',
+        createContact: 'Create Contact',
+        to: {
+            createContact: '/contacts/create',
+        },
+    },
+
+    contactCreate: {
+        title: 'Create Contact',
+        subtitle: 'Create a new contact',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        phone: 'Phone',
+        create: 'Create',
+        cancel: 'Cancel',
+        to: {
+            contacts: '/contacts',
+        },
     },
     home: {
         title: 'MyContacts',

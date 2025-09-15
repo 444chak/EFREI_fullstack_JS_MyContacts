@@ -3,6 +3,8 @@ import useContactApi from '../hooks/useContactApi';
 import { Snackbar, Alert, Box, Stack, Dialog, DialogTitle, DialogContent, TextField, Button } from '@mui/material';
 import dict from '../utils/dict';
 import { DataGrid } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
+import { Add } from '@mui/icons-material';
 
 const columns = [
     { id: 'firstName', label: dict.contacts.firstName, size: 100 },
@@ -21,6 +23,7 @@ const ContactsPage = () => {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const dataGridColumns = columns.map((column) => ({ field: column.id, headerName: column.label, flex: column.size }));
+    const navigate = useNavigate();
     useEffect(() => {
         getContacts()
             .then(setContacts)
@@ -79,6 +82,9 @@ const ContactsPage = () => {
                 <h1>{dict.contacts.title}</h1>
                 <p>{dict.contacts.label}</p>
                 <p>{dict.contacts.subtitle}</p>
+                <Button variant="contained" color="primary" onClick={() => navigate(dict.contacts.to.createContact)} icon={<Add />}>
+                    {dict.contacts.createContact}
+                </Button>
             </Stack>
             <Box sx={{ height: '100%', width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', mx: 'auto', mb: 4 }}>
                 <DataGrid
