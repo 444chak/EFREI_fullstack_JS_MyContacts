@@ -16,3 +16,17 @@ api.interceptors.request.use((config) => {
     }
     return config;
 });
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error?.response?.status === 401) {
+            localStorage.removeItem('token');
+            // Force navigation to login with sessionExpired parameter
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login?sessionExpired=true';
+            }
+        }
+        return Promise.reject(error);
+    }
+);

@@ -14,6 +14,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
 // Components
 import Navbar from './components/Navbar';
+import GlobalSnackbar from './components/GlobalSnackbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/AuthContext';
 

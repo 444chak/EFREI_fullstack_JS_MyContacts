@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, TextField, Button, Box, Alert } from '@mui/material';
+import { Stack, TextField, Button, Box, Alert, Snackbar } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthApi from '../hooks/useAuthApi';
@@ -11,7 +11,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    const [sessionExpired, setSessionExpired] = useState(false);
     const { isAuthenticated } = useAuth();
 
     const navigate = useNavigate();
@@ -34,6 +34,13 @@ const LoginPage = () => {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const sessionExpired = new URLSearchParams(window.location.search).get('sessionExpired');
+        if (sessionExpired) {
+            setSessionExpired(true);
+        }
+    }, []);
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, textAlign: 'center' }}>
@@ -77,6 +84,9 @@ const LoginPage = () => {
 
                 </Stack>
             </Stack>
+            <Snackbar open={sessionExpired} onClose={() => setSessionExpired(false)}>
+                <Alert severity="warning" variant="outlined" onClose={() => { setSessionExpired(false); console.log('closed') }}>Votre session a expiré. Veuillez vous reconnecter.</Alert>
+            </Snackbar>
         </Box>
     );
 };
