@@ -23,6 +23,8 @@ const dict = {
         to: {
             contacts: '/contacts',
         },
+        sessionExpired: 'Your session has expired. Please login again.',
+        needLogin: 'You need to login to access this page.',
     },
 
     register: {
@@ -35,6 +37,12 @@ const dict = {
             login: '/login',
             contacts: '/contacts',
         },
+    },
+
+    contacts: {
+        title: 'Contacts',
+        list: 'List of contacts',
+        loggedIn: 'You are logged in.',
     },
 };
 

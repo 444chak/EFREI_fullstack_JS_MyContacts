@@ -13,13 +13,18 @@ const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [sessionExpired, setSessionExpired] = useState(false);
     const { isAuthenticated } = useAuth();
-
+    const [needLogin, setNeedLogin] = useState(false);
     const navigate = useNavigate();
     const authApi = useAuthApi();
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate(dict.login.to.contacts);
+            navigate(dict.login.to.contacts + '?loggedIn=true');
+        } else {
+            const needLogin = new URLSearchParams(window.location.search).get('needLogin');
+            if (needLogin) {
+                setNeedLogin(true);
+            }
         }
     }, [isAuthenticated, navigate]);
 
@@ -85,7 +90,10 @@ const LoginPage = () => {
                 </Stack>
             </Stack>
             <Snackbar open={sessionExpired} onClose={() => setSessionExpired(false)}>
-                <Alert severity="warning" variant="outlined" onClose={() => { setSessionExpired(false); console.log('closed') }}>Votre session a expiré. Veuillez vous reconnecter.</Alert>
+                <Alert severity="warning" variant="outlined" onClose={() => { setSessionExpired(false); console.log('closed') }}>{dict.login.sessionExpired}</Alert>
+            </Snackbar>
+            <Snackbar open={needLogin} onClose={() => setNeedLogin(false)}>
+                <Alert severity="error" variant="outlined">{dict.login.needLogin}</Alert>
             </Snackbar>
         </Box>
     );
