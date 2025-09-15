@@ -26,12 +26,9 @@ const LoginPage = () => {
     const handleLogin = async () => {
         setIsLoading(true);
         try {
-            console.log("[DEBUG] handleLogin called in LoginPage");
             await authApi.login({ email, password });
             navigate(dict.login.to.contacts);
-            console.log("[DEBUG] handleLogin navigate", navigate);
         } catch (error) {
-            console.log("[DEBUG] handleLogin error", error);
             setError(error?.response?.data?.message || 'Login failed');
         } finally {
             setIsLoading(false);

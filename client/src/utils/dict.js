@@ -24,6 +24,18 @@ const dict = {
             contacts: '/contacts',
         },
     },
+
+    register: {
+        title: 'Register',
+        email: 'Email',
+        password: 'Password',
+        confirmPassword: 'Confirm Password',
+        register: 'Register',
+        to: {
+            login: '/login',
+            contacts: '/contacts',
+        },
+    },
 };
 
 export default dict;
