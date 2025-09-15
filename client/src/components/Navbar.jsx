@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Stack, Box } from '@mui/material';
 import { useAuth } from '../hooks/AuthContext';
+import dict from '../utils/dict';
 
 
 const Navbar = () => {
@@ -10,47 +11,47 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        navigate(dict.navbar.to.login);
     };
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, textAlign: 'center' }}>
             <Stack direction="row" spacing={2}>
                 <Button
                     component={Link}
-                    to="/"
+                    to={dict.navbar.to.home}
                     variant="contained"
                     color="primary"
                 >
-                    MyContacts
+                    {dict.navbar.title}
                 </Button>
                 {!isAuthenticated && (
                     <Button
                         component={Link}
-                        to="/login"
+                        to={dict.navbar.to.login}
                         variant="outlined"
                         color="primary"
                     >
-                        Connexion
+                        {dict.navbar.login}
                     </Button>
                 )}
                 {!isAuthenticated && (
                     <Button
                         component={Link}
-                        to="/register"
+                        to={dict.navbar.to.register}
                         variant="outlined"
                         color="primary"
                     >
-                        Inscription
+                        {dict.navbar.register}
                     </Button>
                 )}
                 {isAuthenticated && (
                     <Button
                         component={Link}
-                        to="/contacts"
+                        to={dict.navbar.to.contacts}
                         variant="outlined"
                         color="primary"
                     >
-                        Contacts
+                        {dict.navbar.contacts}
                     </Button>
                 )}
                 {isAuthenticated && (
@@ -59,7 +60,7 @@ const Navbar = () => {
                         color="primary"
                         onClick={handleLogout}
                     >
-                        Déconnexion
+                        {dict.navbar.logout}
                     </Button>
                 )}
             </Stack>

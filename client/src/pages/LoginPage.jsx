@@ -1,9 +1,10 @@
 import React from 'react';
 import { Stack, TextField, Button, Box, Alert } from '@mui/material';
-import api from '../services/api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAuthApi from '../hooks/useAuthApi';
 import { useAuth } from '../hooks/AuthContext';
+import dict from '../utils/dict';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -11,16 +12,26 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    const { isAuthenticated } = useAuth();
+
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const authApi = useAuthApi();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(dict.login.to.contacts);
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleLogin = async () => {
         setIsLoading(true);
         try {
-            const response = await api.post('/auth/login', { email, password });
-            login(response.data.token);
-            navigate('/contacts');
+            console.log("[DEBUG] handleLogin called in LoginPage");
+            await authApi.login({ email, password });
+            navigate(dict.login.to.contacts);
+            console.log("[DEBUG] handleLogin navigate", navigate);
         } catch (error) {
+            console.log("[DEBUG] handleLogin error", error);
             setError(error?.response?.data?.message || 'Login failed');
         } finally {
             setIsLoading(false);
@@ -29,13 +40,43 @@ const LoginPage = () => {
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, textAlign: 'center' }}>
-            <Stack direction="column" spacing={2}>
-                <h1>LoginPage</h1>
-                <Stack direction="column" spacing={2}>
+            <Stack
+                direction="column"
+                spacing={2}
+            >
+                <h1>{dict.login.title}</h1>
+                <Stack
+                    direction="column"
+                    spacing={2}
+                    component="form"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleLogin();
+                    }}
+                >
                     {error && <Alert severity="error">{error}</Alert>}
-                    <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <Button variant="contained" color="primary" onClick={handleLogin} disabled={isLoading}>Login</Button>
+                    <TextField
+                        label={dict.login.email}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                    <TextField
+                        label={dict.login.password}
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        disabled={isLoading}
+                    >
+                        {dict.login.login}
+                    </Button>
 
                 </Stack>
             </Stack>
