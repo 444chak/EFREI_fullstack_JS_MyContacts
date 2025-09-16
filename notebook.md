@@ -58,3 +58,11 @@ séparer config
 ajouter services (auth, contact)
 
 ajouter validation & errors middleware
+
+----
+
+Pour le readme :
+faire le .env server (avec example)
+
+npm i
+npm start
