@@ -73,3 +73,20 @@ TODO :
 [ ] faire la doc (readme)  
 [x] faire marcher swagger en dist  
 [ ] TUs
+[ ] gérer responsive
+[ ] ajouter footer vers lien sur mon site (chkb.fr)
+[ ] ajouter loader quand on login et ajouter loader quand on charge les contacts
+
+Fais un readme bien détaillé et complet avec les infos suivantes :
+
+Pour le readme :
+
+- anglais et français
+- en dev :
+  - soit lancer le serveur et le client séparement (expliquer avec les .env.example, et npm start pour chacun)
+  - soit lancer avec le docker-compose.dev.yml (expliquer avec les .env.example, et docker-compose up -d pour lancer le serveur et le client)
+- donner les urls de prod (la demo sur <https://efrei-mycontacts-chak.vercel.app/> et <https://mycontacts-chak-prod.up.railway.app/> (client et serveur respectivement))
+- expliquer les technologies utiliées (la lib MUI par exemple, l'architecture MVC, les endpoints disponibles, etc.)
+- expliquer Bruno (que c'est comme postman et tout hésite pas à faire tes recherches pour expliquer)
+
+Si il manque quelque chose tu as la liberté de l'ajouter.
