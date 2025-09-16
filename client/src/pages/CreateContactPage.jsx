@@ -4,23 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import useContactApi from '../hooks/useContactApi';
 import dict from '../utils/dict';
 import { Box, Stack, TextField, Button, Alert } from '@mui/material';
+import useApiErrors from '../hooks/useApiErrors';
 
 const CreateContactPage = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phone, setPhone] = useState('');
-    const [error, setError] = useState('');
+    const { formError, setFromError, resetErrors, getFieldError } = useApiErrors();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { createContact } = useContactApi();
     const handleCreateContact = async () => {
         setIsLoading(true);
         try {
+            resetErrors();
             await createContact({ firstName, lastName, phone });
             navigate(dict.contactCreate.to.contacts);
-            setError('');
         } catch (error) {
-            setError(error?.response?.data?.message || 'Create contact failed');
+            setFromError(error, 'Create contact failed');
         } finally {
             setIsLoading(false);
         }
@@ -34,24 +35,30 @@ const CreateContactPage = () => {
                 e.preventDefault();
                 handleCreateContact();
             }}>
-                {error && <Alert severity="error">{error}</Alert>}
+                {formError && <Alert severity="error">{formError}</Alert>}
                 <TextField
                     label={dict.contactCreate.firstName}
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
+                    error={Boolean(getFieldError('firstName'))}
+                    helperText={getFieldError('firstName')}
                 />
                 <TextField
                     label={dict.contactCreate.lastName}
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
+                    error={Boolean(getFieldError('lastName'))}
+                    helperText={getFieldError('lastName')}
                 />
                 <TextField
                     label={dict.contactCreate.phone}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     required
+                    error={Boolean(getFieldError('phone'))}
+                    helperText={getFieldError('phone')}
                 />
                 <Button
                     variant="contained"

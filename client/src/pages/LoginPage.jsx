@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import useAuthApi from '../hooks/useAuthApi';
 import { useAuth } from '../hooks/AuthContext';
 import dict from '../utils/dict';
+import useApiErrors from '../hooks/useApiErrors';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const { formError, setFromError, resetErrors, getFieldError } = useApiErrors();
     const [isLoading, setIsLoading] = useState(false);
     const [sessionExpired, setSessionExpired] = useState(false);
     const { isAuthenticated } = useAuth();
@@ -31,10 +32,11 @@ const LoginPage = () => {
     const handleLogin = async () => {
         setIsLoading(true);
         try {
+            resetErrors();
             await authApi.login({ email, password });
             navigate(dict.login.to.contacts);
         } catch (error) {
-            setError(error?.response?.data?.message || 'Login failed');
+            setFromError(error, 'Login failed');
         } finally {
             setIsLoading(false);
         }
@@ -63,13 +65,15 @@ const LoginPage = () => {
                         handleLogin();
                     }}
                 >
-                    {error && <Alert severity="error">{error}</Alert>}
+                    {formError && <Alert severity="error">{formError}</Alert>}
                     <TextField
                         label={dict.login.email}
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        error={Boolean(getFieldError('email'))}
+                        helperText={getFieldError('email')}
                     />
                     <TextField
                         label={dict.login.password}
@@ -77,6 +81,8 @@ const LoginPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        error={Boolean(getFieldError('password'))}
+                        helperText={getFieldError('password')}
                     />
                     <Button
                         variant="contained"

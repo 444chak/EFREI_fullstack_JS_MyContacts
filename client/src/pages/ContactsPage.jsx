@@ -5,6 +5,7 @@ import dict from '../utils/dict';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
+import useApiErrors from '../hooks/useApiErrors';
 
 const columns = [
     { id: 'firstName', label: dict.contacts.firstName, size: 100 },
@@ -19,7 +20,7 @@ const ContactsPage = () => {
     const [open, setOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
     const [updatedContact, setUpdatedContact] = useState({});
-    const [error, setError] = useState(null);
+    const { formError, setFromError, resetErrors, getFieldError } = useApiErrors();
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const dataGridColumns = columns.map((column) => ({ field: column.id, headerName: column.label, flex: column.size }));
@@ -41,8 +42,8 @@ const ContactsPage = () => {
 
     const handleUpdateContact = async () => {
         try {
+            resetErrors();
             await updateContact(selectedContact._id, updatedContact);
-            setError(null);
             setUpdatedContact({});
             setSelectedContact(null);
             refreshContacts();
@@ -50,7 +51,7 @@ const ContactsPage = () => {
             setOpenSnackbar(true);
             setSnackbarMessage(dict.contacts.updated);
         } catch (error) {
-            setError(error.response.data.message);
+            setFromError(error, dict.contacts.updateError || 'Update failed');
         }
     };
 
@@ -61,13 +62,14 @@ const ContactsPage = () => {
 
     const handleDeleteContact = async () => {
         try {
+            resetErrors();
             await deleteContact(selectedContact._id);
             refreshContacts();
             setOpen(false);
             setOpenSnackbar(true);
             setSnackbarMessage(dict.contacts.deleted);
         } catch (error) {
-            setError(error.response.data.message);
+            setFromError(error, dict.contacts.deleteError || 'Delete failed');
         }
     };
 
@@ -124,25 +126,29 @@ const ContactsPage = () => {
                                 e.preventDefault();
                                 handleUpdateContact();
                             }}>
-                                {
-                                    error && <Alert severity="error">{error}</Alert>
-                                }
+                                {formError && <Alert severity="error">{formError}</Alert>}
                                 <input type="hidden" value={selectedContact._id} />
 
                                 <TextField
                                     label={dict.contacts.firstName}
                                     value={updatedContact.firstName}
                                     onChange={(e) => setUpdatedContact({ ...updatedContact, firstName: e.target.value })}
+                                    error={Boolean(getFieldError('firstName'))}
+                                    helperText={getFieldError('firstName')}
                                 />
                                 <TextField
                                     label={dict.contacts.lastName}
                                     value={updatedContact.lastName}
                                     onChange={(e) => setUpdatedContact({ ...updatedContact, lastName: e.target.value })}
+                                    error={Boolean(getFieldError('lastName'))}
+                                    helperText={getFieldError('lastName')}
                                 />
                                 <TextField
                                     label={dict.contacts.phone}
                                     value={updatedContact.phone}
                                     onChange={(e) => setUpdatedContact({ ...updatedContact, phone: e.target.value })}
+                                    error={Boolean(getFieldError('phone'))}
+                                    helperText={getFieldError('phone')}
                                 />
                                 <Button variant="contained" color="primary" type="submit">
                                     {dict.contacts.update}

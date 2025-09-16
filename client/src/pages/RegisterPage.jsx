@@ -5,12 +5,13 @@ import useAuthApi from '../hooks/useAuthApi';
 import { useAuth } from '../hooks/AuthContext';
 import dict from '../utils/dict';
 import { TextField, Button, Stack, Box, Alert } from '@mui/material';
+import useApiErrors from '../hooks/useApiErrors';
 
 const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
+    const { formError, setFromError, resetErrors, getFieldError, setFormError } = useApiErrors();
     const [isLoading, setIsLoading] = useState(false);
 
     const { isAuthenticated } = useAuth();
@@ -27,16 +28,16 @@ const RegisterPage = () => {
     const handleRegister = async () => {
         setIsLoading(true);
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setFormError('Passwords do not match');
             setIsLoading(false);
             return;
         }
         try {
+            resetErrors();
             await authApi.register({ email, password });
             navigate(dict.register.to.contacts);
-            setError('');
         } catch (error) {
-            setError(error?.response?.data?.message || 'Register failed');
+            setFromError(error, 'Register failed');
         } finally {
             setIsLoading(false);
         }
@@ -58,13 +59,15 @@ const RegisterPage = () => {
                         handleRegister();
                     }}
                 >
-                    {error && <Alert severity="error">{error}</Alert>}
+                    {formError && <Alert severity="error">{formError}</Alert>}
                     <TextField
                         label={dict.register.email}
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        error={Boolean(getFieldError('email'))}
+                        helperText={getFieldError('email')}
                     />
                     <TextField
                         label={dict.register.password}
@@ -72,6 +75,8 @@ const RegisterPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        error={Boolean(getFieldError('password'))}
+                        helperText={getFieldError('password')}
                     />
                     <TextField
                         label={dict.register.confirmPassword}
@@ -79,6 +84,8 @@ const RegisterPage = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
+                        error={Boolean(getFieldError('confirmPassword'))}
+                        helperText={getFieldError('confirmPassword')}
                     />
                     <Button
                         variant="contained"
