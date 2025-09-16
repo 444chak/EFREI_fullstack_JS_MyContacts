@@ -1,8 +1,8 @@
-import api from '../services/api';
+import api from "../services/api";
 
 export default function useContactApi() {
     const getContacts = async () => {
-        const { data } = await api.get('/contacts');
+        const { data } = await api.get("/contacts");
         return data;
     };
 
@@ -16,6 +16,11 @@ export default function useContactApi() {
         return data;
     };
 
-    return { getContacts, updateContact, deleteContact };
+    const createContact = async (newContact) => {
+        const { data } = await api.post("/contacts", newContact);
+        return data;
+    };
+
+    return { getContacts, updateContact, deleteContact, createContact };
 }
 
