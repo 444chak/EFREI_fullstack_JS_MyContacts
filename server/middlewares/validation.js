@@ -40,10 +40,19 @@ const validateEmailField = (fieldName = 'email') => (req) => {
     return null;
 };
 
+const validatePhoneField = (fieldName = 'phone') => (req) => {
+    const value = req.body[fieldName];
+    if (typeof value !== 'string') return { field: fieldName, message: `${fieldName} must be a string` };
+    const regex = /^\d{10}$/; // format : 1234567890
+    if (!regex.test(value)) return { field: fieldName, message: `Invalid ${fieldName}` };
+    return null;
+};
+
 module.exports = {
     runValidators,
     requireBodyFields,
     validateEmailField,
+    validatePhoneField,
 };
 
 
