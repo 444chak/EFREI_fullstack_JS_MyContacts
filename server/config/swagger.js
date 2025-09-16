@@ -15,11 +15,16 @@ const swaggerOptions = {
                 email: 'support@mycontacts.com'
             }
         },
+        // Use relative URL for production to match current origin (avoids mixed content/CORS on HTTPS)
         servers: [
+            {
+                url: '/',
+                description: 'Current host (production)'
+            },
             {
                 url: `http://localhost:${port}`,
                 description: 'Development server'
-            },
+            }
         ],
         components: {
             securitySchemes: {
