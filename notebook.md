@@ -66,3 +66,10 @@ faire le .env server (avec example)
 
 npm i
 npm start
+
+TODO :  
+[x] gérer la validation en front (messages d'erreurs précis (avec peut être un helper / utils))  
+[ ] séparer les controllers en controllers+services (à voir comment faire )  
+[ ] faire la doc (readme)  
+[x] faire marcher swagger en dist  
+[ ] TUs
