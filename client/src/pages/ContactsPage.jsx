@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import useContactApi from '../hooks/useContactApi';
-import { Snackbar, Alert, Box, Stack, Dialog, DialogTitle, DialogContent, TextField, Button } from '@mui/material';
+import { Snackbar, Alert, Box, Stack, Dialog, DialogTitle, DialogContent, TextField, Button, CircularProgress } from '@mui/material';
 import dict from '../utils/dict';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 import useApiErrors from '../hooks/useApiErrors';
+import useDimensions from '../hooks/useDimensions';
 
 const columns = [
     { id: 'firstName', label: dict.contacts.firstName, size: 100 },
@@ -16,6 +17,7 @@ const columns = [
 const ContactsPage = () => {
     const { getContacts, updateContact, deleteContact } = useContactApi();
     const [contacts, setContacts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [loggedIn, setLoggedIn] = useState(false);
     const [open, setOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
@@ -26,10 +28,10 @@ const ContactsPage = () => {
     const dataGridColumns = columns.map((column) => ({ field: column.id, headerName: column.label, flex: column.size }));
     const navigate = useNavigate();
     useEffect(() => {
+        setIsLoading(true);
         getContacts()
             .then(setContacts)
-            .catch(() => {
-            });
+            .finally(() => setIsLoading(false));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -56,8 +58,13 @@ const ContactsPage = () => {
     };
 
     const refreshContacts = async () => {
-        const response = await getContacts();
-        setContacts(response);
+        setIsLoading(true);
+        try {
+            const response = await getContacts();
+            setContacts(response);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDeleteContact = async () => {
@@ -73,8 +80,11 @@ const ContactsPage = () => {
         }
     };
 
+    const { isXs, isSm } = useDimensions();
+    const containerWidth = isXs ? '95%' : isSm ? '85%' : '60%';
+
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, textAlign: 'center', width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, textAlign: 'center', width: '100%', }}>
 
             <Stack
                 direction="column"
@@ -88,31 +98,33 @@ const ContactsPage = () => {
                     {dict.contacts.createContact}
                 </Button>
             </Stack>
-            <Box sx={{ height: '100%', width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', mx: 'auto', mb: 4 }}>
-                <DataGrid
-                    rows={contacts}
-                    columns={dataGridColumns}
-                    getRowId={(row) => row._id}
-                    pageSizeOptions={[10, 20, 50]}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 10 }
-                        }
-                    }}
-                    pagination
-                    rowSelection={false}
-                    onRowClick={(params) => {
-                        setSelectedContact(params.row);
-                        setUpdatedContact({
-                            firstName: params.row.firstName,
-                            lastName: params.row.lastName,
-                            phone: params.row.phone
-                        });
-                        setOpen(true);
-                    }}
-
-
-                />
+            <Box sx={{ height: '100%', width: containerWidth, display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', mx: 'auto', mb: 4 }}>
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <DataGrid
+                        rows={contacts}
+                        columns={dataGridColumns}
+                        getRowId={(row) => row._id}
+                        pageSizeOptions={[10, 20, 50]}
+                        initialState={{
+                            pagination: {
+                                paginationModel: { page: 0, pageSize: 10 }
+                            }
+                        }}
+                        pagination
+                        rowSelection={false}
+                        onRowClick={(params) => {
+                            setSelectedContact(params.row);
+                            setUpdatedContact({
+                                firstName: params.row.firstName,
+                                lastName: params.row.lastName,
+                                phone: params.row.phone
+                            });
+                            setOpen(true);
+                        }}
+                    />
+                )}
             </Box>
             {loggedIn && <Snackbar open={loggedIn} onClose={() => setLoggedIn(false)}>
                 <Alert severity="success" variant="outlined">{dict.contacts.loggedIn}</Alert>

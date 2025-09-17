@@ -12,6 +12,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
 // Components
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/AuthContext';
 
@@ -44,6 +45,7 @@ function App() {
                             <Route path="*" element={<Navigate to="/404" replace />} />
                         </Routes>
                     </main>
+                    <Footer />
                 </div>
             </AuthProvider>
         </Router>
