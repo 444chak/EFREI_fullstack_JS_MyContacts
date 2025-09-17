@@ -69,10 +69,9 @@ npm start
 
 TODO :  
 [x] gérer la validation en front (messages d'erreurs précis (avec peut être un helper / utils))  
-[ ] séparer les controllers en controllers+services (à voir comment faire )  
-[ ] faire la doc (readme)  
+[x] faire la doc (readme)  
 [x] faire marcher swagger en dist  
-[ ] TUs
+[x] TUs
 [ ] gérer responsive
 [ ] ajouter footer vers lien sur mon site (chkb.fr)
 [ ] ajouter loader quand on login et ajouter loader quand on charge les contacts

@@ -36,6 +36,7 @@
 - 📱 **Design responsive** / **Responsive Design**
 - 🐳 **Déploiement Docker** / **Docker Deployment**
 - 📚 **Documentation API complète** / **Complete API Documentation**
+- 🧪 **Tests unitaires complets** / **Comprehensive Unit Tests**
 
 ---
 
@@ -64,6 +65,8 @@
 - **Docker & Docker Compose** - Containerisation
 - **Swagger/OpenAPI** - Documentation API
 - **Bruno** - Client API (alternative à Postman)
+- **Jest** - Framework de tests unitaires
+- **Supertest** - Tests d'intégration HTTP
 - **ESLint** - Linting du code
 - **Nodemon** - Redémarrage automatique du serveur
 
@@ -148,6 +151,20 @@ cd client
 npm start
 ```
 
+#### 4. Exécution des tests / Running Tests
+
+```bash
+# Tests du serveur / Server tests
+cd server
+npm test
+
+# Tests en mode watch / Watch mode
+npm run test:watch
+
+# Tests avec couverture de code / Tests with coverage
+npm run test:coverage
+```
+
 L'application sera accessible sur :
 
 - **Client** : <http://localhost:3000>
@@ -198,6 +215,110 @@ docker-compose -f docker-compose.dev.yml down
 ### Documentation API / API Documentation
 
 - **Swagger UI** : [https://mycontacts-chak-prod.up.railway.app/api-docs](https://mycontacts-chak-prod.up.railway.app/api-docs)
+
+---
+
+## Tests / Testing
+
+### Tests unitaires / Unit Tests
+
+Le projet inclut une suite complète de tests unitaires pour le backend, couvrant tous les endpoints et fonctionnalités :
+
+**Test coverage includes:**
+
+- ✅ **Authentication endpoints** (register, login)
+- ✅ **Contact CRUD operations** (create, read, update, delete)
+- ✅ **Input validation** (email format, required fields, phone validation)
+- ✅ **Authorization** (JWT token verification)
+- ✅ **Error handling** (invalid data, unauthorized access, not found)
+
+### Structure des tests / Test Structure
+
+```text
+server/
+├── tests/
+│   ├── setup.js           # Configuration des tests
+│   ├── auth.test.js       # Tests d'authentification
+│   └── contacts.test.js   # Tests de gestion des contacts
+├── jest.config.js         # Configuration Jest
+└── package.json           # Scripts de test
+```
+
+### Commandes de test / Test Commands
+
+```bash
+# Exécuter tous les tests / Run all tests
+npm test
+
+# Tests en mode watch / Watch mode
+npm run test:watch
+
+# Tests avec couverture de code / Tests with coverage
+npm run test:coverage
+
+# Tests spécifiques / Specific tests
+npm test -- --testNamePattern="auth"
+npm test -- --testNamePattern="contacts"
+```
+
+### Couverture de code / Code Coverage
+
+Les tests couvrent :
+
+- **Controllers** : 100% des méthodes
+- **Routes** : Tous les endpoints
+- **Middlewares** : Validation et authentification
+- **Error handling** : Gestion des erreurs
+
+### Prérequis pour les tests / Test Prerequisites
+
+- **MongoDB** (local, Docker, ou Atlas)
+- **Node.js** 20.x+
+- **Docker** (optionnel, pour MongoDB en conteneur)
+- Variables d'environnement configurées
+
+### Installation de MongoDB pour les tests / MongoDB Setup for Tests
+
+#### Option 1 : Docker (Recommandée) 🐳
+
+```bash
+# Lancer MongoDB avec Docker
+docker run -d --name mongodb-test -p 27017:27017 mongo:latest
+
+# Vérifier que MongoDB fonctionne
+docker ps
+
+# Arrêter MongoDB quand vous avez fini
+docker stop mongodb-test
+```
+
+#### Option 2 : Installation locale / Local Installation
+
+**Windows :**
+
+```powershell
+# Via Chocolatey
+choco install mongodb
+
+# Via Scoop
+scoop install mongodb
+```
+
+**Linux/macOS :**
+
+```bash
+# Via Homebrew (macOS)
+brew install mongodb/brew/mongodb-community
+
+# Via Apt (Ubuntu/Debian)
+sudo apt install mongodb
+```
+
+#### Option 3 : MongoDB Atlas (Cloud) ☁️
+
+1. Créez un compte sur [MongoDB Atlas](https://www.mongodb.com/atlas)
+2. Créez un cluster gratuit
+3. Modifiez `server/tests/setup.js` avec votre URI Atlas
 
 ---
 
@@ -358,6 +479,8 @@ MyContacts/
 │   ├── middlewares/          # Middlewares
 │   ├── models/               # Modèles de données
 │   ├── routes/               # Routes API
+│   ├── tests/                # Tests unitaires
+│   ├── jest.config.js        # Configuration Jest
 │   ├── package.json
 │   └── index.js
 ├── BRUNO_Collection/         # Collections Bruno
