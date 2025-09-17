@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, TextField, Button, Box, Alert, Snackbar } from '@mui/material';
+import { Stack, TextField, Button, Box, Alert, Snackbar, CircularProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthApi from '../hooks/useAuthApi';
@@ -90,7 +90,7 @@ const LoginPage = () => {
                         type="submit"
                         disabled={isLoading}
                     >
-                        {dict.login.login}
+                        {isLoading ? <CircularProgress size={24} color="inherit" /> : dict.login.login}
                     </Button>
 
                 </Stack>
