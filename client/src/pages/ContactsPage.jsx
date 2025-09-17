@@ -6,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 import useApiErrors from '../hooks/useApiErrors';
+import useDimensions from '../hooks/useDimensions';
 
 const columns = [
     { id: 'firstName', label: dict.contacts.firstName, size: 100 },
@@ -73,8 +74,11 @@ const ContactsPage = () => {
         }
     };
 
+    const { isXs, isSm } = useDimensions();
+    const containerWidth = isXs ? '95%' : isSm ? '85%' : '60%';
+
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, textAlign: 'center', width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, textAlign: 'center', width: '100%', }}>
 
             <Stack
                 direction="column"
@@ -88,7 +92,7 @@ const ContactsPage = () => {
                     {dict.contacts.createContact}
                 </Button>
             </Stack>
-            <Box sx={{ height: '100%', width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', mx: 'auto', mb: 4 }}>
+            <Box sx={{ height: '100%', width: containerWidth, display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', mx: 'auto', mb: 4 }}>
                 <DataGrid
                     rows={contacts}
                     columns={dataGridColumns}

@@ -72,7 +72,7 @@ TODO :
 [x] faire la doc (readme)  
 [x] faire marcher swagger en dist  
 [x] TUs
-[ ] gérer responsive
+[x] gérer responsive
 [x] ajouter footer vers lien sur mon site (chkb.fr)
 [ ] ajouter loader quand on login et ajouter loader quand on charge les contacts
 
