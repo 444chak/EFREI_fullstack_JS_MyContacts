@@ -73,7 +73,7 @@ TODO :
 [x] faire marcher swagger en dist  
 [x] TUs
 [ ] gérer responsive
-[ ] ajouter footer vers lien sur mon site (chkb.fr)
+[x] ajouter footer vers lien sur mon site (chkb.fr)
 [ ] ajouter loader quand on login et ajouter loader quand on charge les contacts
 
 Fais un readme bien détaillé et complet avec les infos suivantes :
